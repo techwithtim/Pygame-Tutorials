@@ -104,10 +104,13 @@ class enemy(object):
         self.hitbox = (self.x + 17, self.y + 2, 31, 57)
         self.health = 10
         self.visible = True
+        self.dead=False
 
     def draw(self,win):
         self.move()
-        if self.visible:
+        if self.dead:
+            self.hitbox = (0,0,0,0)
+        if self.visible :
             if self.walkCount + 1 >= 33:
                 self.walkCount = 0
 
@@ -122,6 +125,7 @@ class enemy(object):
             pygame.draw.rect(win, (0,128,0), (self.hitbox[0], self.hitbox[1] - 20, 50 - (5 * (10 - self.health)), 10))
             self.hitbox = (self.x + 17, self.y + 2, 31, 57)
             #pygame.draw.rect(win, (255,0,0), self.hitbox,2)
+        
 
     def move(self):
         if self.vel > 0:
@@ -142,7 +146,8 @@ class enemy(object):
             self.health -= 1
         else:
             self.visible = False
-        print('hit')
+            self.dead= True
+        #print('hit')
 
         
 
@@ -184,15 +189,18 @@ while run:
             run = False
         
     for bullet in bullets:
-        if bullet.y - bullet.radius < goblin.hitbox[1] + goblin.hitbox[3] and bullet.y + bullet.radius > goblin.hitbox[1]:
-            if bullet.x + bullet.radius > goblin.hitbox[0] and bullet.x - bullet.radius < goblin.hitbox[0] + goblin.hitbox[2]:
-                hitSound.play()
-                goblin.hit()
-                score += 1
-                bullets.pop(bullets.index(bullet))
-                
         if bullet.x < 500 and bullet.x > 0:
             bullet.x += bullet.vel
+
+            if bullet.y - bullet.radius < goblin.hitbox[1] + goblin.hitbox[3] and bullet.y + bullet.radius > goblin.hitbox[1]:
+                if bullet.x + bullet.radius > goblin.hitbox[0] and bullet.x - bullet.radius < goblin.hitbox[0] + goblin.hitbox[2]:
+    	            hitSound.play()
+    	            goblin.hit()
+    	            if not(goblin.dead):
+                        score+= 1
+                        bullets.pop(bullets.index(bullet))
+                
+        
         else:
             bullets.pop(bullets.index(bullet))
 
@@ -244,5 +252,4 @@ while run:
     redrawGameWindow()
 
 pygame.quit()
-
 
