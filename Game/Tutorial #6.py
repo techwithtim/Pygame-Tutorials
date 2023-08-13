@@ -86,14 +86,14 @@ class enemy(object):
             
     def move(self):
         if self.vel > 0:
-            if self.x < self.path[1] + self.vel:
+            if self.x + self.vel < self.path[1]:
                 self.x += self.vel
             else:
                 self.vel = self.vel * -1
                 self.x += self.vel
                 self.walkCount = 0
         else:
-            if self.x > self.path[0] - self.vel:
+            if self.x - self.vel > self.path[0]:
                 self.x += self.vel
             else:
                 self.vel = self.vel * -1
